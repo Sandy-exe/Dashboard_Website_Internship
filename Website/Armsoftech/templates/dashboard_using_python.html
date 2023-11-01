@@ -1,0 +1,951 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block Main %}
+
+
+<body class="g-sidenav-show  bg-gray-200" >
+    <div class="sidebar close">
+        <div class="logo-details">
+            <span class="chevron"><i class='bx bxs-chevron-right'></i></span>
+            <span class="logo_name">Select Filter</span>
+        </div>
+        <ul class="nav-links">
+            {% for key,filter in filter_context.items %}
+            {% if filter %}
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-filter-alt'></i>
+                        <span class="link_name" id="{{ key }}">{{ key }}</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                {% for value in filter%}
+                <ul class="sub-menu" id="zone-list">
+                    <li><a href="#"><div id="{{ value }}">{{ value }}</div></a></li>
+                </ul>
+                {% endfor %}
+            </li>
+            {% endif %}
+            {% endfor %}
+        <button id="save-button"class="btn save" style="display: none;">Filter</button>
+        <button id="clear-button" class="btn Clear" style="display: none; float: left; margin-top: 10px;color: white; font-size: 12px;">Clear all</button>
+        </a>
+        </ul>
+    </div>
+
+
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <div class="row" style="margin-right: 80px;">
+            <div class="col-md-12 text-center">
+                <h1 style="padding-top: 20px;">Python Dashboard</h1>
+            </div>
+        </div>
+
+        <div class="container-fluid py-4" >
+            <div class="row" style="margin-right: 50px;">
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="card">
+                        <div class="card-header p-3 pt-2">
+                            <div
+                                class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                                <i class="material-icons opacity-10">person</i>
+                            </div>
+                            <div class="text-end pt-1">
+                                <p class="text-sm mb-0 text-capitalize">Total Allocation</p>
+                                <h4 class="mb-0" id="allocation">{{ allocation }}</h4>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-3">
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55% </span>than last
+                                week</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="card">
+                        <div class="card-header p-3 pt-2">
+                            <div
+                                class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
+                                <i class="material-icons opacity-10">phone</i>
+                            </div>
+                            <div class="text-end pt-1">
+                                <p class="text-sm mb-0 text-capitalize">Connect Percentage</p>
+                                <h4 class="mb-0" id="connect_percentage">{{ connect_percentage }}%</h4>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-3">
+                            <p class="mb-0"><span class="text-   text-sm font-weight-bolder">+1.2% </span>than last
+                                month</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="card">
+                        <div class="card-header p-3 pt-2">
+                            <div
+                                class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
+                                <i class="material-icons opacity-10">paid</i>
+                            </div>
+                            <div class="text-end pt-1">
+                                <p class="text-sm mb-0 text-capitalize">Paid Count</p>
+                                <h4 class="mb-0" id="paid_count">{{ paid_count }}</h4>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-3">
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+2%</span> than
+                                yesterday</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6">
+                    <div class="card">
+                        <div class="card-header p-3 pt-2">
+                            <div
+                                class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+                                <i class="material-icons opacity-10">done</i>
+                            </div>
+                            <div class="text-end pt-1">
+                                <p class="text-sm mb-0 text-capitalize">Resolution Percentage</p>
+                                <h4 class="mb-0" id="resolution_percentage">{{ resolution_percentage }}%</h4>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-3">
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+5% </span>than
+                                yesterday</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4" style="margin-right: 50px;">
+                <div class="col-xl-3 col-sm-6">
+                    <div class="card mb-4 mt-4">
+                        <div class="card-header p-3 pt-2">
+                            <div
+                                class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+                                <i class="material-icons opacity-10">trending_flat</i>
+                            </div>
+                            <div class="text-end pt-1">
+                                <p class="text-sm mb-0 text-capitalize">Average Attempt Intensity</p>
+                                <h4 class="mb-0" id="avg_attempt_intensity">{{ avg_attempt_intensity }}</h4>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-3">
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+5% </span>than
+                                yesterday</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header p-3 pt-2">
+                            <div
+                                class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+                                <i class="material-icons opacity-10">trending_up</i>
+                            </div>
+                            <div class="text-end pt-1">
+                                <p class="text-sm mb-0 text-capitalize">Averge Connect Intensity</p>
+                                <h4 class="mb-0" id="avg_connect_intensity">{{ avg_connect_intensity }}</h4>
+                            </div>
+                        </div>
+                        <hr class="dark horizontal my-0">
+                        <div class="card-footer p-3">
+                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+5% </span>than
+                                yesterday</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                    <div class="card z-index-2 ">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                                <div class="chart">
+                                    <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-0 ">Requested Language</h6>
+                            <p class="text-sm ">Hindi is MOST WANTED</p>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm"> updated 2 days ago </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-5 col-md-6 mt-4 mb-4">
+                    <div class="card z-index-2  ">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                            <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
+                                <div class="chart">
+                                    <canvas id="chart-line" class="chart-canvas" height="170"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-0 ">Connections By Zone </h6>
+                            <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in East Side.
+                            </p>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm"> updated 4 min ago </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+                
+                <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                    <div class="card z-index-2  ">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                            <div class="shadow-success border-radius-lg py-3 pe-1" style="background-image: linear-gradient(rgb(241, 230, 240),rgba(198, 229, 243, 0.748));">
+                                <div class="chart">
+                                    <canvas id="stacked" class="chart-canvas" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-0 "> Attempt and Connect Count by Paid Status</h6>
+                            <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in Paid status.
+                            </p>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm"> updated 4 min ago </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                    <div class="card z-index-2  ">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                            <div class="shadow-success border-radius-lg py-3 pe-1" style="background-image: linear-gradient(rgb(241, 230, 240),rgba(118, 238, 140, 0.748));">
+                                <div class="chart">
+                                    <canvas id="polarArea" class="chart-canvas" height="170"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-0 "> Montly Connect Percentage </h6>
+                            <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in calls.
+                            </p>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm"> updated 4 min ago </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                    <div class="card z-index-2  ">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                            <div class="bg-gradient-light shadow-success border-radius-lg py-3 pe-1">
+                                <div class="chart">
+                                    <canvas id="radar" class="chart-canvas" height="170"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-0 "> Loan type by Paid Status</h6>
+                            <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in Paid in autoloan.
+                            </p>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm"> updated 4 min ago </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-6 mt-4 mb-4">
+                    <div class="card z-index-2  ">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                            <div class="shadow-success border-radius-lg py-3 pe-1" style="background-image: linear-gradient(rgb(241, 230, 240),rgba(234, 248, 198, 0.748));">
+                                <div class="chart">
+                                    <canvas id="LineArea" class="chart-canvas" height="100"  ></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-0 "> Paid Status by State</h6>
+                            <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in Paid Account.
+                            </p>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm"> updated 4 min ago </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="footer py-4  ">
+                <div class="container-fluid">
+                    <div class="row align-items-center justify-content-lg-between">
+                        <div class="col-lg-6 mb-lg-0 mb-4">
+                            <div class="copyright text-center text-sm text-muted text-lg-start">
+                                &copy; <a href="https://www.linkedin.com/in/santhosh-kumar-santhanam/" class="font-weight-bold"
+                                    target="_blank">Santhosh Kumar S</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6" >
+                            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                                <li class="nav-item" style="margin-right: 50px ;">
+                                    Thank You for Visiting
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            
+        </div>
+    </main>
+
+    <!--   Core JS Files   -->
+    <script src="/static/js/core/popper.min.js"></script>
+    <script src="/static/js/core/bootstrap.min.js"></script>
+    <script src="/static/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="/static/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="/static/js/plugins/chartjs.min.js"></script>
+
+{% if Values %}
+
+    <script>
+        $(document).ready(function () {
+            var data = JSON.parse('{{ Values|escapejs }}');
+            selectedZones = data;
+            for (var key in data) {
+                console.log(data[key]); 
+                for (var l in data[key]){
+                    console.log(data[key][l]);
+                    var element = $('#'+data[key][l]); 
+                    console.log("ok");
+                    console.log(data);
+                    var listItem = element.parent();
+                    listItem = listItem.parent();    
+                    var checkmark = $('<i>').addClass('bx bx-check');
+                    listItem.append(checkmark);
+                    listItem.addClass('selected');  
+                    console.log(element.text());
+                }
+                }
+            });
+    </script>
+
+{% endif %}
+
+
+
+<script>
+    var data = JSON.parse('{{ datajson_context|escapejs }}');
+    var pie_month_list = data.pie_month_list;
+    var pie_percentage_list = data.pie_percentage_list;
+    var line_lang_list = data.line_lang_list;
+    var line_lang_counts = data.line_lang_counts;
+    var line_zone_list = data.line_zone_list;
+    var line_zone_counts = data.line_zone_counts;
+    var stacked_attempt_list = data.stacked_attempt_values;
+    var stacked_connect_list = data.stacked_connect_values;
+    var radar_loan_list = data.radar_loan_list;
+    var radar_loan_paid = data.radar_loan_paid;
+    var radar_loan_unpaid = data.radar_loan_unpaid;
+    var state_list = data.state_list;
+    var state_paid = data.state_paid;
+    var state_unpaid = data.state_unpaid;
+    console.log(radar_loan_paid);
+    console.log(radar_loan_unpaid);
+    console.log(radar_loan_list)
+
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+    $(document).ready(function () {
+
+        var selectedZones = {};
+        var filter_contextjs = JSON.parse('{{ filter_cc|escapejs  }}');
+        // Listen for click events on the zone list items
+        $('#zone-list li a').click(function (event) {
+            console.log("seleccte");
+            console.log(selectedZones);
+            let subMenuItems = document.querySelectorAll("#zone-list li a");
+            event.preventDefault();
+            var zone = $(this).text();
+            var listItem = $(this).parent();
+            console.log(listItem)
+            console.log(filter_contextjs)
+            var ok;
+            for (var key in filter_contextjs) {
+
+                if (filter_contextjs.hasOwnProperty(key)) {
+                    if (filter_contextjs[key].includes(zone)) {
+                        ok = key;
+                    }
+                }
+            }
+
+            if (!selectedZones[ok]) {
+                selectedZones[ok] = [];
+            }
+
+
+            if (!listItem.hasClass('selected')) {
+                var checkmark = $('<i>').addClass('bx bx-check');
+                listItem.append(checkmark);
+                listItem.addClass('selected');
+                // selectedZones.push(zone);
+
+                selectedZones[ok].push(zone);
+
+
+            } else {
+                selectedZones[ok] = selectedZones[ok].filter(function (item) {
+                    console.log(item)
+                    return item !== zone;
+                });
+                console.log(selectedZones[ok])
+                listItem.find('i').remove();
+                listItem.removeClass('selected');
+                if (selectedZones[ok].length === 0) {
+                    delete selectedZones[ok];
+                }
+            }
+            console.log("selefefdsa d");    
+            console.log(selectedZones)
+        });
+        //get cookie
+
+        $('#clear-button').click(function (event) {
+            event.preventDefault();
+            selectedZones = {};
+            $('#zone-list li').removeClass('selected');
+            $('#zone-list li i').remove();
+        });
+
+        function ajaxx() {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                url: "{% url 'Main_app:python_dashboard' %}",
+                type: 'POST',
+                data: JSON.stringify(selectedZones),
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function (response_data) {
+                    var cards = JSON.parse(response_data.card_context);
+                    var pie = JSON.parse(response_data.piejson_context)
+                    console.log(cards);
+                    $('#allocation').html(cards.allocation);
+                    $('#connect_percentage').html(cards.connect_percentage);
+                    $('#paid_count').html(cards.paid_count);
+                    $('#resolution_percentage').html(cards.resolution_percentage);
+                    $('#avg_attempt_intensity').html(cards.avg_attempt_intensity);
+                    $('#avg_connect_intensity').html(cards.avg_connect_intensity);
+                    console.log(pie_percentage_list)
+                    pie_month_list = pie.pie_month_list;
+                    pie_percentage_list = pie.pie_percentage_list;
+                    console.log(pie.pie_percentage_list)
+                    polar.update();
+                    var polarChartCanvas = document.getElementById("polarArea");
+
+                    // Get the chart object
+                    var polarChart = Chart.instances[0];
+
+                    // Refresh the chart    
+                    polarChart.update();
+                },
+                error: function (xhr, status, error) {
+                    alert('Error saving zones: ' + error);
+                }
+            });
+
+        }
+
+        // Listen for click events on the save button
+        $('#save-button').click(function (event) {
+            event.preventDefault();
+            // Send the selected zones to the server using AJAX
+            console.log(selectedZones);
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                url: "{% url 'Main_app:loading_put'  %}",
+                type: 'POST',
+                data: JSON.stringify(selectedZones),
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function (response_data) {
+                    console.log(response_data);   
+                    window.location.href = "{% url 'Main_app:loading_put' %}";
+                }
+                });
+            });
+        });
+    
+
+    let arrow = document.querySelectorAll(".arrow ");
+    let saveButton = document.querySelector("#save-button");
+    let clearbutton = document.querySelector("#clear-button");
+    for (var i = 0; i < arrow.length; i++) {
+        arrow[i].addEventListener("click", (e) => {
+            let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
+            arrowParent.classList.toggle("showMenu");
+        });
+    }
+    let sidebar = document.querySelector(".sidebar");
+    let sidebaropen = document.querySelector(".bxs-chevron-left");
+    let sidebarclose = document.querySelector(".bxs-chevron-right");
+    console.log(sidebarclose);
+    sidebarclose.addEventListener("click", () => {
+        sidebar.classList.toggle("close");
+        if (sidebar.classList.contains("close")) {
+            saveButton.style.display = "none";
+            clearbutton.style.display = "none";
+        } else {
+            saveButton.style.display = "block";
+            clearbutton.style.display = "block";
+        }
+    });
+
+
+
+
+
+    var ctx = document.getElementById("chart-bars").getContext("2d");
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: line_lang_list,
+            datasets: [{
+                label: "Language Count",
+                tension: 0.4,
+                borderWidth: 0,
+                borderRadius: 4,
+                borderSkipped: false,
+                backgroundColor: "rgba(255, 255, 255, .8)",
+                data: line_lang_counts,
+                maxBarThickness: 10
+            },],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: false,
+                        borderDash: [5, 5],
+                        color: 'rgba(255, 255, 255, .2)'
+                    },
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 500,
+                        beginAtZero: true,
+                        padding: 10,
+                        font: {
+                            size: 14,
+                            weight: 300,
+                            family: "Roboto",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                        color: "#fff",
+                        callback: function (value, index, values) {
+                            if (value >= 10000000) {
+                                return ((value / 10000000).toFixed(2)) + 'Cr';
+                            }
+                            else if (value >= 100000) {
+                                return ((value / 100000).toFixed(2)) + 'L';
+                            } else if (value >= 1000) {
+                                return ((value / 1000).toFixed(2)) + 'K';
+                            } else {
+                                return value;
+                            }
+                        }
+                    },
+                },
+                x: {
+                    grid: {
+                        drawBorder: false,
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: false,
+                        borderDash: [5, 5],
+                        color: 'rgba(255, 255, 255, .2)'
+                    },
+                    ticks: {
+
+                        color: '#f8f9fa',
+                        padding: 10,
+                        font: {
+                            size: 14,
+                            weight: 300,
+                            family: "Roboto",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+            },
+        },
+
+    });
+
+
+    var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+    new Chart(ctx2, {
+        type: "line",
+        data: {
+            labels: line_zone_list,
+            datasets: [{
+                label: "Count",
+                tension: 0,
+                borderWidth: 0,
+                pointRadius: 5,
+                pointBackgroundColor: "rgba(255, 255, 255, .8)",
+                pointBorderColor: "transparent",
+                borderColor: "rgba(255, 255, 255, .8)",
+                borderColor: "rgba(255, 255, 255, .8)",
+                borderWidth: 4,
+                backgroundColor: "transparent",
+                fill: true,
+                data: line_zone_counts,
+                maxBarThickness: 6
+
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: false,
+                        borderDash: [5, 5],
+                        color: 'rgba(255, 255, 255, .2)'
+                    },
+                    ticks: {
+                        display: true,
+                        color: '#f8f9fa',
+                        padding: 10,
+                        suggestedMin: 0,
+                        suggestedMax: 500,
+                        beginAtZero: true,
+                        display: true,
+                        font: {
+                            size: 14,
+                            weight: 300,
+                            family: "Roboto",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                        callback: function (value, index, values) {
+                            if (value >= 10000000) {
+                                return ((value / 10000000).toFixed(2)) + 'Cr';
+                            }
+                            else if (value >= 100000) {
+                                return ((value / 100000).toFixed(2)) + 'L';
+                            } else if (value >= 1000) {
+                                return ((value / 1000).toFixed(2)) + 'K';
+                            } else {
+                                return value;
+                            }
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        drawBorder: false,
+                        display: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        color: '#f8f9fa',
+                        padding: 10,
+                        font: {
+                            size: 14,
+                            weight: 300,
+                            family: "Roboto",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+            },
+        },
+    });
+
+
+    var ctx4 = document.getElementById("stacked").getContext("2d");
+
+    new Chart(ctx4, {
+        type: 'bar',
+        data: {
+            labels: ["Paid", "Unpaid"],
+            datasets: [
+                {
+                    label: 'Attempt Count',
+                    data: stacked_attempt_list,
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    hoverBackgroundColor: 'rgb(255, 99, 132, 0.5)',
+                    hoverBorderColor: 'rgb(255, 99, 132)',
+                    hoverBorderWidth: 2
+                },
+                {
+                    label: 'Connect Count',
+                    data: stacked_connect_list,
+                    backgroundColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgb(54, 162, 235)',
+                    hoverBackgroundColor: 'rgb(54, 162, 235, 0.5)',
+                    hoverBorderColor: 'rgb(54, 162, 235)',
+                    hoverBorderWidth: 2
+                },
+            ]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        callback: function (value, index, values) {
+                            if (value >= 10000000) {
+                                return ((value / 10000000).toFixed(2)) + 'Cr';
+                            }
+                            else if (value >= 100000) {
+                                return ((value / 100000).toFixed(2)) + 'L';
+                            } else if (value >= 1000) {
+                                return ((value / 1000).toFixed(2)) + 'K';
+                            } else {
+                                return value;
+                            }
+                        }
+                    }
+                },
+                y: {
+                    stacked: true,
+                }
+            }
+        }
+    });
+
+
+
+    var polarAreaChart = document.getElementById("polarArea");
+
+
+    var bg_color = [
+        'rgb(255, 99, 132)',
+        'rgb(75, 192, 192)',
+        'rgb(255, 205, 86)',
+    ];
+    console.log(data.pie_month_list);
+    console.log(data.pie_percentage_list);
+    var polar = new Chart(polarAreaChart, {
+        type: 'polarArea',
+        data: {
+            labels: pie_month_list,
+            datasets: [{
+                label: 'My First Dataset',
+                data: pie_percentage_list,
+                backgroundColor: bg_color,
+                hoverBorderWidth: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: {
+                animateScale: false
+            },
+            plugins: {
+                legend: {
+                    display: true
+                }
+            }
+        }
+    });
+
+    function clickHandler(click) {
+        points = polar.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+        if (points[0]) {
+            const dataset = points[0].datasetIndex;
+            const index = points[0].index;
+            const label = polar.data.labels[index];
+            const value = polar.data.datasets[dataset].data[index];
+            const bg = polar.data.datasets[dataset].backgroundColor[index];
+            polar.data.labels = [label];
+            polar.data.datasets[dataset].data = [value];
+            polar.data.datasets[dataset].backgroundColor = [bg];
+            polar.update();
+            console.log(label);
+            console.log(value);
+        } else {
+            polar.data.labels = pie_month_list;
+            polar.data.datasets[0].data = pie_percentage_list;
+            polar.data.datasets[0].backgroundColor = bg_color;
+            polar.update();
+        }
+    }
+
+    polar.canvas.onclick = clickHandler;
+
+    var ctx6 = document.getElementById("radar").getContext("2d");
+
+    new Chart(ctx6, {
+        type: 'radar',
+        data: {
+            labels: radar_loan_list,
+            datasets: [{
+                label: 'Paid ',
+                data: radar_loan_paid,
+                fill: true,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgb(255, 99, 132)',
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(255, 99, 132)'
+            }, {
+                label: 'Unpaid',
+                data: radar_loan_unpaid,
+                fill: true,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                pointBackgroundColor: 'rgb(54, 162, 235)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(54, 162, 235)'
+            }]
+        },
+        options: {
+            scale: {
+                ticks: {
+                    callback: function (value, index, values) {
+                        if (value >= 10000000) {
+                            return ((value / 10000000).toFixed(2)) + 'Cr';
+                        }
+                        else if (value >= 100000) {
+                            return ((value / 100000).toFixed(2)) + 'L';
+                        } else if (value >= 1000) {
+                            return ((value / 1000).toFixed(2)) + 'K';
+                        } else {
+                            return value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    var ctx7 = document.getElementById("LineArea").getContext("2d");
+
+    new Chart(ctx7, {
+        type: 'line',
+        data: {
+            labels: state_list,
+            datasets: [{
+                label: 'Paid',
+                data: state_paid,
+                fill: true,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgb(255, 99, 132)',
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(255, 99, 132)'
+            }, {
+                label: 'Unpaid',
+                data: state_unpaid,
+                fill: true,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                pointBackgroundColor: 'rgb(54, 162, 235)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(54, 162, 235)'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function (value, index, values) {
+                            if (value >= 10000000) {
+                                return ((value / 10000000).toFixed(2)) + 'Cr';
+                            }
+                            else if (value >= 100000) {
+                                return ((value / 100000).toFixed(2)) + 'L';
+                            } else if (value >= 1000) {
+                                return ((value / 1000).toFixed(2)) + 'K';
+                            } else {
+                                return value;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+        
+        </script>
+
+</body>
+
+{% endblock %}
+
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!-- Coding by CodingNepal | www.codingnepalweb.com -->
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Drop Down Sidebar Menu | CodingLab </title>
+    <link rel="stylesheet" href="CSS.css">
+    <!-- Boxiocns CDN Link -->
+ 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo-details">
+                <span class="chevron"><i class='bx bxs-chevron-right'></i></span>
+                <span class="logo_name">Select Filter</span>
+        </div>
+        <ul class="nav-links">
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-filter-alt'></i>
+                        <span class="link_name">Paid Status</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    
+                    <li><a href="#">Paid</a></li>
+                    <li><a href="#">UnPaid</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-filter-alt'></i>
+                        <span class="link_name">Zone</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">Category</a></li>
+                    <li><a href="#">North</a></li>
+                    <li><a href="#">South</a></li>
+                    <li><a href="#">East</a></li>
+                    <li><a href="#">West</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-filter-alt'></i>
+                        <span class="link_name">Month</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a href="#">July</a></li>
+                    <li><a href="#">June</a></li>
+                    <li><a href="#">October</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-filter-alt'></i>
+                        <span class="link_name">Loan Type</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a href="#">Auto</a></li>
+                    <li><a href="#">Car</a></li>
+                    <li><a href="#">House</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <script>
+        let arrow = document.querySelectorAll(".arrow");
+        for (var i = 0; i < arrow.length; i++) {
+            arrow[i].addEventListener("click", (e) => {
+                let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
+                arrowParent.classList.toggle("showMenu");
+            });
+        }
+        let sidebar = document.querySelector(".sidebar");
+        let sidebaropen = document.querySelector(".bxs-chevron-left");
+        let sidebarclose = document.querySelector(".bxs-chevron-right");
+        console.log(sidebarclose);
+        sidebarclose.addEventListener("click", () => {
+            sidebar.classList.toggle("close");
+        });
+        sidebaropen.addEventListener("click", () => {
+                sidebar.classList.toggle("close");
+            });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+Sql commands for analysis
+1) select (sum(connect)/sum(not connected+connected))*100 as percentage from main group by month(BAR GRAPH)
+
+query:
+
+CREATE TABLE Connect_by_Month AS
+SELECT Month, (COUNT(*) / (SELECT SUM(allocation) FROM card_data)) * 100 as Percentage
+FROM main
+WHERE callstatus = 'Connected'
+GROUP BY Month;
+
+2) select (sum(connect)/sum(not connected+connected))*100 as percentage from main group by zone (BAR GRAPH)
+
+query:
+CREATE TABLE Connect_by_Zone AS
+SELECT Zone, (COUNT(*) / (SELECT SUM(allocation) FROM card_data)) * 100 as Percentage
+FROM main
+WHERE callstatus = 'Connected'
+GROUP BY Zone;
+
+
+3) select (sum(connect)/sum(not connected+connect))*100 as percentage,(sum(notconnect)/sum(connected+notconnected))*100 as percentage from main(BAR GRAPH)
+
+query:
+
+
+
+4) select sum(connect)/sum(not connected+connected) as percentage from main group by acc status (LINE GRAPH)
+
+query:
+
+
+5) select sum(connect)/sum(not connected+connected) as percentage from main group by acc language(LINE GRAPH)
+
+query:
+
+6) select sum(connect)/sum(not connected+connected) as percentage,sum(attempt)/sum(not attempted+attempt) as percentage1 from main group by acc status(BAR)
+
+query:
+
+7) select sum(connect)/sum(not connected+connected) as percentage,sum(attempt)/sum(not attempted+attempt) as percentage1 from main group by CALL status(BAR)
+
+query:
+
+
+for cards
+1) allocation/volume (12467521)
+2) Connect % (64.8649)(8087041/allocation)
+3) paid count (10445761)
+4) resolution (paidcount/connected)%  
+5) Avg attempt intensity sum(noofattempts)/count(account)=17.972973
+6) Avg connect intensity sum(noofconnects)/count(account)=2.837837
+
+
+
+
+
+
+Future Configurations:
+1) view and change data in admin
+2) if i use database alone...filter option is not possible is very slow (possible solution is to create intermediate database for 
+required data alone and update it from server side or sampling)
+3) if i use csv alone(with python)...filter option is possible but not secure (solution: create a python file to just to store 
+hard coded csv pandas dataframe to use from there)
+4) using indexing is an option???
+

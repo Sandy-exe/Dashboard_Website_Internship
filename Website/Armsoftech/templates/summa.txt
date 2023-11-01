@@ -1,0 +1,557 @@
+
+    <script>
+        var data = JSON.parse('{{ datajson_context|escapejs }}');
+        var pie_month_list = data.pie_month_list;
+        var pie_percentage_list = data.pie_percentage_list;
+        
+        function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+        
+        $(document).ready(function () {
+            
+                var selectedZones = {};
+                var filter_contextjs = JSON.parse('{{ filter_cc|escapejs  }}');
+                // Listen for click events on the zone list items
+                $('#zone-list li a').click(function (event) {
+                    let subMenuItems = document.querySelectorAll("#zone-list li a");
+                    event.preventDefault();
+                    var zone = $(this).text();
+                    var listItem = $(this).parent();
+
+                    console.log(filter_contextjs)
+                    var ok;
+                    for (var key in filter_contextjs) {
+
+                        if (filter_contextjs.hasOwnProperty(key)) {
+                            if (filter_contextjs[key].includes(zone)) {
+                                ok = key;
+                            }
+                        }
+                    }
+
+                    if (!selectedZones[ok]) {
+                        selectedZones[ok] = [];
+                    }
+
+                    
+                    if (!listItem.hasClass('selected')) {
+                        var checkmark = $('<i>').addClass('bx bx-check');
+                        listItem.append(checkmark);
+                        listItem.addClass('selected');
+                        // selectedZones.push(zone);
+                        
+                        selectedZones[ok].push(zone);
+
+              
+                    } else {
+                        selectedZones[ok] = selectedZones[ok].filter(function (item) {
+                            console.log(item)
+                            return item !== zone;
+                        });
+                        console.log(selectedZones[ok])
+                        listItem.find('i').remove();
+                        listItem.removeClass('selected');
+                        if (selectedZones[ok].length === 0) {
+                            delete selectedZones[ok];
+                        }
+                    }
+                    console.log(selectedZones)
+                });
+                //get cookie
+                
+                $('#clear-button').click(function (event){
+                    event.preventDefault();
+                    selectedZones = {};
+                    $('#zone-list li').removeClass('selected');
+                    $('#zone-list li i').remove();
+                });
+
+                function ajaxx(){
+                    var csrftoken = getCookie('csrftoken');
+                    $.ajax({
+                        url: "{% url 'Main_app:python_dashboard' %}",
+                        type: 'POST',
+                        data: JSON.stringify(selectedZones),
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        },
+                        success: function (response_data) {
+                            var cards = JSON.parse(response_data.card_context);
+                            var pie = JSON.parse(response_data.piejson_context)
+                            console.log(cards);
+                            $('#allocation').html(cards.allocation);
+                            $('#connect_percentage').html(cards.connect_percentage);
+                            $('#paid_count').html(cards.paid_count);
+                            $('#resolution_percentage').html(cards.resolution_percentage);
+                            $('#avg_attempt_intensity').html(cards.avg_attempt_intensity);
+                            $('#avg_connect_intensity').html(cards.avg_connect_intensity);
+                            console.log(pie_percentage_list)
+                            pie_month_list = pie.pie_month_list;
+                            pie_percentage_list = pie.pie_percentage_list;
+                            console.log(pie.pie_percentage_list)
+                            polar.update();
+                            var polarChartCanvas = document.getElementById("polarArea");
+
+                            // Get the chart object
+                            var polarChart = Chart.instances[0];
+
+                            // Refresh the chart    
+                            polarChart.update();
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error saving zones: ' + error);
+                        }
+                    });
+
+                }
+
+                // Listen for click events on the save button
+                $('#save-button').click(function (event) {
+                    event.preventDefault();
+                    // Send the selected zones to the server using AJAX
+                    var csrftoken = getCookie('csrftoken');
+                    $.ajax({
+                        url: "{% url 'Main_app:loading' %}",
+                        type: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        },
+                        success: function (response_data) {
+                            window.location.href = "{% url 'Main_app:loading' %}";
+                        },
+                }); 
+            });
+
+        });
+
+        let arrow = document.querySelectorAll(".arrow ");
+        let saveButton = document.querySelector("#save-button");
+        let clearbutton = document.querySelector("#clear-button");
+        for (var i = 0; i < arrow.length; i++) {
+            arrow[i].addEventListener("click", (e) => {
+                let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
+                arrowParent.classList.toggle("showMenu");
+            });
+        }
+        let sidebar = document.querySelector(".sidebar");
+        let sidebaropen = document.querySelector(".bxs-chevron-left");
+        let sidebarclose = document.querySelector(".bxs-chevron-right");
+        console.log(sidebarclose);
+        sidebarclose.addEventListener("click", () => {
+            sidebar.classList.toggle("close");
+            if (sidebar.classList.contains("close")) {
+                saveButton.style.display = "none";
+                clearbutton.style.display = "none";
+            } else {
+                saveButton.style.display = "block";
+                clearbutton.style.display = "block";
+            }
+        });
+
+        
+
+
+
+        var ctx = document.getElementById("chart-bars").getContext("2d");
+
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["Hindi","English","Tamil","Telugu","Malayalam"],
+                datasets: [{
+                    label: "Language Count",
+                    tension: 0.4,
+                    borderWidth: 0,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    backgroundColor: "rgba(255, 255, 255, .8)",
+                    data: [ 1000000, 400000, 300000,100000,200000],
+                    maxBarThickness: 10
+                },],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false  ,
+                    },
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [5, 5],
+                            color: 'rgba(255, 255, 255, .2)'
+                        },
+                        ticks: {
+                            suggestedMin: 0,
+                            suggestedMax: 500,
+                            beginAtZero: true,
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                weight: 300,
+                                family: "Roboto",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                            color: "#fff",
+                            callback: function (value, index, values) {
+                                if (value>=10000000){
+                                    return (value / 10000000) + 'Cr';
+                                }
+                                else if (value >= 100000) {
+                                    return (value / 100000) + 'L';
+                                } else if (value >= 1000) {
+                                    return (value / 1000) + 'K';
+                                } else {
+                                    return value;
+                                }
+                            }
+                        },
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [5, 5],
+                            color: 'rgba(255, 255, 255, .2)'
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#f8f9fa',
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                weight: 300,
+                                family: "Roboto",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                },
+            },
+            
+        });
+
+
+        var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+        new Chart(ctx2, {
+            type: "line",
+            data: {
+                labels: ["North", "South", "East", "West"],
+                datasets: [{
+                    label: "Count",
+                    tension: 0,
+                    borderWidth: 0,
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(255, 255, 255, .8)",
+                    pointBorderColor: "transparent",
+                    borderColor: "rgba(255, 255, 255, .8)",
+                    borderColor: "rgba(255, 255, 255, .8)",
+                    borderWidth: 4,
+                    backgroundColor: "transparent",
+                    fill: true,
+                    data: [1000, 400, 3000, 200],
+                    maxBarThickness: 6
+
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            drawBorder: false,
+                            display: true,
+                            drawOnChartArea: true,
+                            drawTicks: false,
+                            borderDash: [5, 5],
+                            color: 'rgba(255, 255, 255, .2)'
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#f8f9fa',
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                weight: 300,
+                                family: "Roboto",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                            callback: function (value, index, values) {
+                                if (value >= 10000000) {
+                                    return (value / 10000000) + 'Cr';
+                                }
+                                else if (value >= 100000) {
+                                    return (value / 100000) + 'L';
+                                } else if (value >= 1000) {
+                                    return (value / 1000) + 'K';
+                                } else {
+                                    return value;
+                                }
+                            }   
+                        }
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false,
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            borderDash: [5, 5]
+                        },
+                        ticks: {
+                            display: true,
+                            color: '#f8f9fa',
+                            padding: 10,
+                            font: {
+                                size: 14,
+                                weight: 300,
+                                family: "Roboto",
+                                style: 'normal',
+                                lineHeight: 2
+                            },
+                        }
+                    },
+                },
+            },
+        });
+
+        
+        var ctx4 = document.getElementById("stacked").getContext("2d");
+
+        new Chart(ctx4, {
+            type: 'bar',
+            data : {
+                labels: ["Paid","Unpaid"],
+                datasets: [
+                    {
+                        label: 'Attempt Percentage',
+                        data: [11,43],
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        hoverBackgroundColor: 'rgb(255, 99, 132, 0.5)',
+                        hoverBorderColor: 'rgb(255, 99, 132)',
+                        hoverBorderWidth: 2 
+                    },
+                    {
+                        label: 'Connect Percentage',
+                        data: [21, 33],
+                        backgroundColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgb(54, 162, 235)',
+                        hoverBackgroundColor: 'rgb(54, 162, 235, 0.5)',
+                        hoverBorderColor: 'rgb(54, 162, 235)',
+                        hoverBorderWidth: 2
+                    },
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks:{
+                            callback: function (value, index, values) {
+                                if (value >= 10000000) {
+                                    return (value / 10000000) + 'Cr';
+                                }
+                                else if (value >= 100000) {
+                                    return (value / 100000) + 'L';
+                                } else if (value >= 1000) {
+                                    return (value / 1000) + 'K';
+                                } else {
+                                    return value;
+                                }
+                            }
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                    }
+                }
+            }
+        });
+
+        
+
+        var polarAreaChart = document.getElementById("polarArea");
+
+  
+        var bg_color = [
+                'rgb(255, 99, 132)',
+                'rgb(75, 192, 192)',
+                'rgb(255, 205, 86)',
+            ];
+        console.log(data.pie_month_list);
+        console.log(data.pie_percentage_list);
+        var polar = new Chart(polarAreaChart, {
+            type: 'polarArea',
+            data: {
+                labels: pie_month_list,
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: pie_percentage_list,
+                    backgroundColor: bg_color,
+                    hoverBorderWidth: 5, 
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    animateScale: false
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
+        });
+
+        function clickHandler(click){
+            points = polar.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true) ;
+            if (points[0]){
+                const dataset = points[0].datasetIndex;
+                const index = points[0].index;
+                const label = polar.data.labels[index];
+                const value = polar.data.datasets[dataset].data[index];
+                const bg = polar.data.datasets[dataset].backgroundColor[index];
+                polar.data.labels = [label];
+                polar.data.datasets[dataset].data = [value];
+                polar.data.datasets[dataset].backgroundColor = [bg];
+                polar.update();
+                console.log(label);
+                console.log(value);
+            }else{
+                polar.data.labels = pie_month_list;
+                polar.data.datasets[0].data = pie_percentage_list;
+                polar.data.datasets[0].backgroundColor = bg_color;
+                polar.update();
+            }
+        }
+
+        polar.canvas.onclick = clickHandler;
+        
+        var ctx6 = document.getElementById("radar").getContext("2d");
+
+            new Chart(ctx6, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Auto Loan',
+                        'Bike Loan',
+                        'Car Loan',
+                        'House Loan',
+                    ],
+                    datasets: [{
+                        label: 'Paid ',
+                        data: [65, 59,23,12],
+                        fill: true,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        pointBackgroundColor: 'rgb(255, 99, 132)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(255, 99, 132)'
+                    }, {
+                            label: 'Unpaid',
+                            data: [28, 48, 40, 19],
+                            fill: true,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgb(54, 162, 235)',
+                            pointBackgroundColor: 'rgb(54, 162, 235)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgb(54, 162, 235)'
+                        }]
+                },
+                options: {}
+            });
+
+           var ctx7 = document.getElementById("LineArea").getContext("2d");
+
+            new Chart(ctx7, {
+                type: 'line',
+                data: {
+                    labels: ["Jan","Feb","Mar","Apr", "May", "Jun", "jul", "Aug", "Sep", "Oct","Nov","Dec"],
+                    datasets: [{
+                        label: 'Repeat',
+                        data: [34,24,24,65, 59, 90, 81, 56, 55, 40,42,52],
+                        fill: true,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        pointBackgroundColor: 'rgb(255, 99, 132)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(255, 99, 132)'
+                    }, {
+                        label: 'Fresh',
+                        data: [28, 48, 40, 19, 96, 27, 100, 65, 59, 90, 81, 56],
+                        fill: true,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgb(54, 162, 235)',
+                        pointBackgroundColor: 'rgb(54, 162, 235)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(54, 162, 235)'
+                    }]
+                },
+                options: {
+                    scales:{
+                        y:{
+                            ticks:{
+                                callback: function (value, index, values) {
+                                    if (value >= 10000000) {
+                                        return (value / 10000000) + 'Cr';
+                                    }
+                                    else if (value >= 100000) {
+                                        return (value / 100000) + 'L';
+                                    } else if (value >= 1000) {
+                                        return (value / 1000) + 'K';
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
