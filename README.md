@@ -1,13 +1,18 @@
 # Armsoftech Internship Project
 
 ## About
-At Armsoftech, I crafted a dynamic Django-based dashboard for client access during my internship. It includes seamless PowerBI integration for advanced data analytics.
+At Armsoftech, I crafted a dynamic Django-based dashboard for client access during my internship. It includes seamless PowerBI integration for advanced data analytics. Advanced Django techniques were employed, along with AJAX for dynamic changes.
 
-## Technologies Used
-- **Django**: Leveraged advanced Django features for creating a robust and dynamic web application.
-- **SQLite and MySQL**: Utilized SQLite during development for efficient local data storage and management. Integrated MySQL for robust and scalable data handling in production environments.
-- **AJAX**: Employed AJAX for dynamic changes in the dashboard interface, enhancing user interaction and responsiveness.
-- **PowerBI Integration**: After publishing, integrated PowerBI frames to enable advanced data analytics and visualization within the dashboard, enhancing user experience and decision-making capabilities.
+## Database
+- Utilized SQLite during development for efficient local data storage and management.
+- Integrated MySQL for robust and scalable data handling in production environments.
+
+## PowerBI Integration
+After publishing, integrated PowerBI frames to enable advanced data analytics and visualization within the dashboard, enhancing user experience and decision-making capabilities.
+
+## Screenshots
+![Dashboard Screenshot 1](screenshots/dashboard1.png)
+![Dashboard Screenshot 2](screenshots/dashboard2.png)
 
 ## Usage
 - Clone the repository.
